@@ -1,4 +1,4 @@
-# Ridgid Vacuum Adapter Attachment
+# Ridgid Router Vacuum Adapter Attachment
 
 Part number 513349001
 
