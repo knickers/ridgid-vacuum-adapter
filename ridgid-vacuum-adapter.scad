@@ -2,20 +2,37 @@ $fn = 24;
 thickness = 2;//3;
 
 module curve() {
-	inner = 114;
+	inner = 100;
 	outer = inner + thickness;
 	half = outer/2;
+	width = 75;
 	height = 5;//43;
-	offset = 87;
 
-	translate([0, half, 0])
+	// r * sin(t) = width / 2;
+	// t = asin(width / 2 / r);
+	//
+	// offset = r * cos(t);
+	offset = half * cos( asin(width/2/half) );
+
+	translate([0, half-offset, 0])
 		difference() {
-			cylinder(d=outer, h=height, $fn=$fn*2);
-			translate([0, 0, -1])
-				cylinder(d=inner, h=height+2, $fn=$fn*2);
-			translate([-half-1, half-offset, -1])
+			translate([0, offset, 0]) {
+				difference() {
+					cylinder(d=outer, h=height, $fn=$fn*2);
+					translate([0, 0, -1])
+						cylinder(d=inner, h=height+2, $fn=$fn*2);
+				}
+			}
+			translate([-half-1, 0, -1])
 				cube([outer+2, outer, height+2]);
 		}
+
+		/* Markers to test the correctness of the offset calculation
+		translate([-width/2-thickness, 0, 0])
+			cube([thickness, half-offset, height]);
+		translate([width/2, 0, 0])
+			cube([thickness, half-offset, height]);
+		*/
 }
 
 module tab(hole, wall) {
@@ -49,11 +66,13 @@ module tabs() {
 
 	size = hole + wall;
 
-	translate([-half+size/2, -size/2, 0])
-		cube([distance-size, size, thickness]);
+	translate([-half+size/3, -size/2, 0])
+		#cube([distance-size/1.5, size, thickness]);
 }
 
 curve();
 
 translate([0, -10, 0])
 	tabs();
+/*
+*/
